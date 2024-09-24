@@ -4,19 +4,23 @@ using System.Collections.Generic;
 namespace TpSube{
     public class Tarjeta
     {
-        public int saldo;
+        public float saldo;
 
         public Tarjeta()
         {
-            this.saldo = 0;
+            this.saldo = 9900;
         }
-        public void recargar(recarga, tarjeta)
+        public void recargar(int recarga)
         {
-            if ((tarjeta.saldo + recarga) < 9900){
-              this.saldo += recarga;  
+            if ((saldo + recarga) < 9900){
+              saldo += recarga;  
             } else {
                 throw new Exception("Excede el limite de saldo");
             }
+        }
+
+        public float saldoActual(){
+            return saldo;
         }
     }
 }

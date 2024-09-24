@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 
 namespace TpSube{
-    public class colectivo
+    public class Colectivo
     {
-        public Boleto pagarCon(tarjeta)
+        public static int valorPasaje = 940;
+        public Boleto pagarCon(Tarjeta tarjeta)
         {
-            if (tarjeta.saldo < Boleto.costo){
+            if (tarjeta.saldo < valorPasaje){
                 throw new Exception("Saldo insuficiente");
             } else {
                 tarjeta.saldo -= valorPasaje;
-                return new Boleto;
+                Boleto boleto = new Boleto();
+                boleto.costo= valorPasaje;
+                return boleto;
             }
         }
     }
