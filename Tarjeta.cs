@@ -5,14 +5,14 @@ namespace TpSube{
     public class Tarjeta
     {
         public float saldo;
-
+        public List<int> cargasPosibles = new List<int> { 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 }; 
         public Tarjeta()
         {
-            this.saldo = 9900;
+            this.saldo = 0;
         }
         public void recargar(int recarga)
         {
-            if ((saldo + recarga) < 9900){
+            if (cargasPosibles.Contains(recarga) && (saldo + recarga) < 9900){
               saldo += recarga;  
             } else {
                 throw new Exception("Excede el limite de saldo");
