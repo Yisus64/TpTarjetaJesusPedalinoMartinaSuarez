@@ -12,10 +12,13 @@ namespace TpSube{
         }
         public void recargar(int recarga)
         {
-            if (cargasPosibles.Contains(recarga) && (saldo + recarga) < 9900){
-              saldo += recarga;  
-            } else {
+            if (cargasPosibles.Contains(recarga) && (saldo + recarga) <= 9900){
+              saldo += recarga;
+            } else if ((saldo + recarga) > 9900) {
                 throw new Exception("Excede el limite de saldo");
+            }
+            else {
+                throw new Exception("Monto de carga inválido");
             }
         }
 
