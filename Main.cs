@@ -13,6 +13,11 @@ namespace TpSube{
             Console.WriteLine(tarjeta.saldoActual());
             colectivo.pagarCon(tarjeta);
             Console.WriteLine(tarjeta.saldoActual());
+            MedioBoleto medio = new MedioBoleto();
+            medio.recargar(5000);
+            Console.WriteLine(medio.saldoActual());
+            colectivo.pagarCon(medio);
+            Console.WriteLine(medio.saldoActual());
         }
     }
 }
