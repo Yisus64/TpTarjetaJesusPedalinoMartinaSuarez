@@ -7,6 +7,10 @@ namespace TpSube{
         public float saldo;
         public int valorPasaje = 940;
         public static int max_negativo = 480;
+        public float saldo_pendiente = 0;
+        public float max_saldo = 36000;
+        public List<Boleto> boletos;
+        public int c_boletos_hoy = 0;
         public List<int> cargasPosibles = new List<int> { 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 }; 
         public Tarjeta()
         {
