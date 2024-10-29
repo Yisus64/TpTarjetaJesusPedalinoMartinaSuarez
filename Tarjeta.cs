@@ -5,34 +5,26 @@ namespace TpSube{
     public class Tarjeta
     {
         public float saldo;
-        public int valorPasaje = 940;
-        public static int max_negativo = 480;
         public List<int> cargasPosibles = new List<int> { 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 }; 
+
+        public float saldo_pendiente = 0;
+        public float max_saldo = 36000;
+        public List<Boleto> boletos;
+        public int c_boletos_hoy = 0;
         public Tarjeta()
         {
             this.saldo = 0;
         }
         public void recargar(int recarga)
         {
-            if (cargasPosibles.Contains(recarga) && (saldo + recarga) <= 9900){
+            if (cargasPosibles.Contains(recarga) && (saldo + recarga) <= max_saldo){
               saldo += recarga;
-            } else if ((saldo + recarga) > 9900) {
-                throw new Exception("Excede el limite de saldo");
+            } else if ((saldo + recarga) > max_saldo) {
+                saldo = max_saldo;
+                saldo_pendiente += ((saldo + recarga) - max_saldo);
             }
             else {
                 throw new Exception("Monto de carga inválido");
-            }
-        }
-
-        public virtual Boleto pagar()
-        {
-            if (saldo < (valorPasaje - max_negativo)){
-                throw new Exception("Saldo insuficiente");
-            } else {
-                saldo -= valorPasaje;
-                Boleto boleto = new Boleto();
-                boleto.costo= valorPasaje;
-                return boleto;
             }
         }
 
