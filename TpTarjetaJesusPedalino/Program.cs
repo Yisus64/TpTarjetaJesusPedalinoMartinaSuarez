@@ -8,12 +8,12 @@ namespace TpSube
         // Ejemplo de prueba
         public static void Main()
         {
-            Tarjeta tarjeta = new Tarjeta(6);
-            tarjeta.recargar(5000);
-            Colectivo colectivo = new Colectivo();
-            Console.WriteLine(tarjeta.saldoActual());
-            colectivo.pagarCon(tarjeta);
-            Console.WriteLine(tarjeta.saldoActual());
+            TiempoFalso tiempo = new TiempoFalso();
+            Console.WriteLine(tiempo.Now().DayOfWeek);
+            tiempo.AgregarDias(5);
+            Console.WriteLine(tiempo.Now().DayOfWeek);
+            tiempo.AgregarDias(1);
+            Console.WriteLine(tiempo.Now().DayOfWeek);
         }
     }
 }
