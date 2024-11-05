@@ -16,7 +16,7 @@ namespace TpTarjetaJesusPedalinoTest
         }
 
         [Test]
-        public void pagarConYSinSaldo()
+        public void pagarConYSinSaldoTest()
         {
             tarjeta.recargar(2000);
             colectivo.pagarCon(tarjeta);

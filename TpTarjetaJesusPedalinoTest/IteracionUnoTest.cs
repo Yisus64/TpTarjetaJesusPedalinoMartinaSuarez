@@ -4,7 +4,7 @@ using System;
 
 namespace TpTarjetaJesusPedalinoTest
 {
-    public class Tests
+    public class TestsUno
     {
         Tarjeta tarjeta;
         Colectivo colectivo;

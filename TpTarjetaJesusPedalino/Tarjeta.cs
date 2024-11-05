@@ -5,6 +5,9 @@ namespace TpSube{
     public class Tarjeta
     {
         public float saldo;
+        public int valorPasaje = 940;
+        public static int maxNegativo = 480;
+        public static int maxSaldo = 9900;
         public List<int> cargasPosibles = new List<int> { 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 }; 
         public Tarjeta()
         {
@@ -24,6 +27,11 @@ namespace TpSube{
 
         public float saldoActual(){
             return saldo;
+        }
+
+        public float perdonDivino()
+        {
+            return maxNegativo;
         }
     }
 }
