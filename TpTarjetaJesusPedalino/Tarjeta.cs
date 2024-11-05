@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TpSube{
     public class Tarjeta
@@ -9,6 +10,7 @@ namespace TpSube{
         public static int maxNegativo = 480;
         public static int maxSaldo = 9900;
         public List<int> cargasPosibles = new List<int> { 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 };
+        public List<Boleto> boletos = new List<Boleto>();
         public int ID;
         public Tarjeta(int id)
         {

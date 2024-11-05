@@ -10,7 +10,7 @@ namespace TpSube
         {
             Tarjeta tarjeta = new Tarjeta(6);
             tarjeta.recargar(5000);
-            Colectivo colectivo = new Colectivo();
+            Colectivo colectivo = new Colectivo("K");
             Console.WriteLine(tarjeta.saldoActual());
             colectivo.pagarCon(tarjeta);
             Console.WriteLine(tarjeta.saldoActual());

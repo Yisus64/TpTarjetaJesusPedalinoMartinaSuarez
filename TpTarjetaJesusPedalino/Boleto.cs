@@ -5,5 +5,11 @@ namespace TpSube{
     public class Boleto
     {
         public int costo;
+        public DateTime fechaUltimoViaje;
+        public string lineaDeColectivo;
+        public string tipoDeTarjeta;
+        public float saldoTarjeta;
+        public int idTarjeta;
+        public string nota;
     }
 }
