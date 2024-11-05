@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace TpSube{
     public class Boleto
     {
-        public int costo;
+        public float costo;
         public DateTime fechaUltimoViaje;
         public string lineaDeColectivo;
         public string tipoDeTarjeta;

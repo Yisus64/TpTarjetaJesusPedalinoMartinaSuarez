@@ -4,11 +4,12 @@ using System.Collections.Generic;
 namespace TpSube{
     public class Colectivo
     {
-        public static int valorPasaje = 940;
-        public static int valorPasajeMedio = valorPasaje/2;
+        public static float valorPasaje = 1200;
+        public static float valorPasajeMedio = valorPasaje/2;
         public static int valorPasajeCompleto = 0; // se refiere al valor de una franquicia completa
         public string linea;
         public float saldo_pendiente = 0;
+        public float tarifaNormal; // se refiere a la tarifa que paga una tarjeta normal dependiendo de cuantos viajes tenga en el mes
 
         public Colectivo(string lineaDelBondi)
         {
@@ -35,6 +36,7 @@ namespace TpSube{
                         boleto.idTarjeta = tarjeta.ID;
                         tarjeta.boletos.Add(boleto);
                         tarjeta.cantViajesHoy++;
+                        tarjeta.cantViajesMes++;
                         return boleto;
                     } else
                     {
@@ -48,6 +50,7 @@ namespace TpSube{
                         boleto.idTarjeta = tarjeta.ID;
                         tarjeta.boletos.Add(boleto);
                         tarjeta.cantViajesHoy++;
+                        tarjeta.cantViajesMes++;
                         if (tarjeta.pendiente > 0)
                         {
                             if (tarjeta.pendiente >= boleto.costo)
@@ -76,6 +79,7 @@ namespace TpSube{
                     boleto.idTarjeta = tarjeta.ID;
                     tarjeta.boletos.Add(boleto);
                     tarjeta.cantViajesHoy++;
+                    tarjeta.cantViajesMes++;
                     return boleto;
                 }
                     
@@ -93,6 +97,7 @@ namespace TpSube{
                     boleto.idTarjeta = tarjeta.ID;
                     tarjeta.boletos.Add(boleto);
                     tarjeta.cantViajesHoy++;
+                    tarjeta.cantViajesMes++;
                     if (tarjeta.pendiente > 0)
                     {
                         if (tarjeta.pendiente >= boleto.costo)
@@ -140,6 +145,7 @@ namespace TpSube{
                                 boleto.idTarjeta = tarjeta.ID;
                                 tarjeta.boletos.Add(boleto);
                                 tarjeta.cantViajesHoy++;
+                                tarjeta.cantViajesMes++;
                                 if (tarjeta.pendiente > 0)
                                 {
                                     if (tarjeta.pendiente >= boleto.costo)
@@ -169,6 +175,7 @@ namespace TpSube{
                             boleto.idTarjeta = tarjeta.ID;
                             tarjeta.boletos.Add(boleto);
                             tarjeta.cantViajesHoy++;
+                            tarjeta.cantViajesMes++;
                             if (tarjeta.pendiente > 0)
                             {
                                 if (tarjeta.pendiente >= boleto.costo)
@@ -199,6 +206,7 @@ namespace TpSube{
                         boleto.idTarjeta = tarjeta.ID;
                         tarjeta.boletos.Add(boleto);
                         tarjeta.cantViajesHoy++;
+                        tarjeta.cantViajesMes++;
                         if (tarjeta.pendiente > 0)
                         {
                             if (tarjeta.pendiente >= boleto.costo)
@@ -218,12 +226,8 @@ namespace TpSube{
                     }
                   }
               } else //pasaje normal
-            {
-                if ((tarjeta.saldo + tarjeta.perdonDivino()) < valorPasaje)
                 {
-                    throw new Exception("Saldo insuficiente");
-                }
-                else
+                if (tarjeta.boletos.Count == 0)
                 {
                     tarjeta.saldo -= valorPasaje;
                     Boleto boleto = new Boleto();
@@ -235,6 +239,57 @@ namespace TpSube{
                     boleto.idTarjeta = tarjeta.ID;
                     tarjeta.boletos.Add(boleto);
                     tarjeta.cantViajesHoy++;
+                    tarjeta.cantViajesMes++;
+                    if (tarjeta.pendiente > 0)
+                    {
+                        if (tarjeta.pendiente >= boleto.costo)
+                        {
+                            tarjeta.saldo += boleto.costo;
+                            tarjeta.pendiente -= boleto.costo;
+                            tarjeta.checkPendiente();
+                        }
+                        else
+                        {
+                            tarjeta.saldo += tarjeta.pendiente;
+                            tarjeta.pendiente = 0;
+                        }
+                    }
+                    return boleto;
+                }
+                if(tarjeta.ultimoBoleto().fechaUltimoViaje.Month != tiempo.Now().Month)
+                {
+                    tarjeta.cantViajesMes = 0;
+                }
+
+                if (tarjeta.cantViajesMes < 29)
+                {
+                    tarifaNormal = valorPasaje;
+                } else if (tarjeta.cantViajesMes >= 29 && tarjeta.cantViajesMes < 79)
+                {
+                    tarifaNormal = (float)(valorPasaje * 0.8);
+                } else if (tarjeta.cantViajesMes >= 79)
+                {
+                    tarifaNormal = (float)(valorPasaje * 0.75);
+                }
+
+
+                if ((tarjeta.saldo + tarjeta.perdonDivino()) < tarifaNormal)
+                {
+                    throw new Exception("Saldo insuficiente");
+                }
+                else
+                {
+                    tarjeta.saldo -= tarifaNormal;
+                    Boleto boleto = new Boleto();
+                    boleto.costo = tarifaNormal;
+                    boleto.fechaUltimoViaje = tiempo.Now();
+                    boleto.lineaDeColectivo = linea;
+                    boleto.tipoDeTarjeta = "Sin Franquicia";
+                    boleto.saldoTarjeta = tarjeta.saldo;
+                    boleto.idTarjeta = tarjeta.ID;
+                    tarjeta.boletos.Add(boleto);
+                    tarjeta.cantViajesHoy++;
+                    tarjeta.cantViajesMes++;
                     if (tarjeta.pendiente > 0)
                     {
                         if (tarjeta.pendiente >= boleto.costo)
@@ -255,11 +310,11 @@ namespace TpSube{
             }   
         }
 
-        public int getValorPasaje()
+        public float getValorPasaje()
         {
             return valorPasaje;
         }
-        public int getValorPasajeMedio()
+        public float getValorPasajeMedio()
         {
             return valorPasajeMedio;
         }
