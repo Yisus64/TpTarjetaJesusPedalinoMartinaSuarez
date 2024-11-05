@@ -8,11 +8,13 @@ namespace TpTarjetaJesusPedalinoTest
     {
         Tarjeta tarjeta;
         Colectivo colectivo;
+        TiempoFalso tiempo;
         [SetUp]
         public void Setup()
         {
             tarjeta = new Tarjeta(1);
-            colectivo = new Colectivo();
+            colectivo = new Colectivo("K");
+            tiempo = new TiempoFalso();
         }
 
         [Test]
@@ -53,7 +55,7 @@ namespace TpTarjetaJesusPedalinoTest
         public void pagarTest()
         {
             tarjeta.recargar(2000);
-            Boleto viaje = colectivo.pagarCon(tarjeta);
+            Boleto viaje = colectivo.pagarCon(tarjeta, tiempo);
             Assert.That(tarjeta.saldo, Is.EqualTo(2000-940));
             Assert.NotNull(viaje);
         }

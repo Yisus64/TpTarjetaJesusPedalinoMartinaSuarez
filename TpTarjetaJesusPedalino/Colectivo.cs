@@ -14,39 +14,210 @@ namespace TpSube{
         {
             linea = lineaDelBondi;
         }
-        public Boleto pagarCon(Tarjeta tarjeta)
+        public Boleto pagarCon(Tarjeta tarjeta, Tiempo tiempo)
         {
             if (tarjeta is FranquiciaCompleta)
             {
-                Boleto boleto = new Boleto();
-                boleto.costo = valorPasajeCompleto;
-                boleto.fechaUltimoViaje = DateTime.Now;
-                boleto.lineaDeColectivo = linea;
-                boleto.tipoDeTarjeta = "Franquicia Completa";
-                boleto.saldoTarjeta = tarjeta.saldo;
-                boleto.idTarjeta = tarjeta.ID;
-                tarjeta.boletos.Add(boleto);
-                return boleto;
+                if (tarjeta.boletos.Count != 0)
+                {
+                    if (tarjeta.ultimoBoleto().fechaUltimoViaje.DayOfYear != tiempo.Now().DayOfYear)
+                    {
+                        tarjeta.cantViajesHoy = 0;
+                    }
+                    if(tarjeta.cantViajesHoy < 2)
+                    {
+                        Boleto boleto = new Boleto();
+                        boleto.costo = valorPasajeCompleto;
+                        boleto.fechaUltimoViaje = tiempo.Now();
+                        boleto.lineaDeColectivo = linea;
+                        boleto.tipoDeTarjeta = "Franquicia Completa";
+                        boleto.saldoTarjeta = tarjeta.saldo;
+                        boleto.idTarjeta = tarjeta.ID;
+                        tarjeta.boletos.Add(boleto);
+                        tarjeta.cantViajesHoy++;
+                        return boleto;
+                    } else
+                    {
+                        tarjeta.saldo -= valorPasaje;
+                        Boleto boleto = new Boleto();
+                        boleto.costo = valorPasaje;
+                        boleto.fechaUltimoViaje = tiempo.Now();
+                        boleto.lineaDeColectivo = linea;
+                        boleto.tipoDeTarjeta = "Franquicia Completa";
+                        boleto.saldoTarjeta = tarjeta.saldo;
+                        boleto.idTarjeta = tarjeta.ID;
+                        tarjeta.boletos.Add(boleto);
+                        tarjeta.cantViajesHoy++;
+                        if (tarjeta.pendiente > 0)
+                        {
+                            if (tarjeta.pendiente >= boleto.costo)
+                            {
+                                tarjeta.saldo += boleto.costo;
+                                tarjeta.pendiente -= boleto.costo;
+                                tarjeta.checkPendiente();
+                            }
+                            else
+                            {
+                                tarjeta.saldo += tarjeta.pendiente;
+                                tarjeta.pendiente = 0;
+                            }
+
+                        }
+                        return boleto;
+                    }
+                } else
+                {
+                    Boleto boleto = new Boleto();
+                    boleto.costo = valorPasajeCompleto;
+                    boleto.fechaUltimoViaje = tiempo.Now();
+                    boleto.lineaDeColectivo = linea;
+                    boleto.tipoDeTarjeta = "Franquicia Completa";
+                    boleto.saldoTarjeta = tarjeta.saldo;
+                    boleto.idTarjeta = tarjeta.ID;
+                    tarjeta.boletos.Add(boleto);
+                    tarjeta.cantViajesHoy++;
+                    return boleto;
+                }
+                    
             } else if (tarjeta is FranquiciaMedia)
             {
-                if ((tarjeta.saldo + tarjeta.perdonDivino()) < valorPasajeMedio)
-                {
-                    throw new Exception("Saldo insuficiente");
-                }
-                else
+                if (tarjeta.boletos.Count == 0)
                 {
                     tarjeta.saldo -= valorPasajeMedio;
                     Boleto boleto = new Boleto();
                     boleto.costo = valorPasajeMedio;
-                    boleto.fechaUltimoViaje = DateTime.Now;
+                    boleto.fechaUltimoViaje = tiempo.Now();
                     boleto.lineaDeColectivo = linea;
                     boleto.tipoDeTarjeta = "Franquicia Media";
                     boleto.saldoTarjeta = tarjeta.saldo;
                     boleto.idTarjeta = tarjeta.ID;
                     tarjeta.boletos.Add(boleto);
+                    tarjeta.cantViajesHoy++;
+                    if (tarjeta.pendiente > 0)
+                    {
+                        if (tarjeta.pendiente >= boleto.costo)
+                        {
+                            tarjeta.saldo += boleto.costo;
+                            tarjeta.pendiente -= boleto.costo;
+                            tarjeta.checkPendiente();
+                        }
+                        else
+                        {
+                            tarjeta.saldo += tarjeta.pendiente;
+                            tarjeta.pendiente = 0;
+                        }
+
+                    }
                     return boleto;
                 }
-            } else
+                else
+                {
+                    if (tarjeta.ultimoBoleto().fechaUltimoViaje.DayOfYear != tiempo.Now().DayOfYear)
+                    {
+                        tarjeta.cantViajesHoy = 0;
+                    }
+                    if (tarjeta.cantViajesHoy < 4 && tarjeta.cantViajesHoy >= 0)
+                    {
+                        if ((tarjeta.saldo + tarjeta.perdonDivino()) < valorPasajeMedio)
+                        {
+                            throw new Exception("Saldo insuficiente");
+                        }
+                        if (tarjeta.ultimoBoleto().fechaUltimoViaje.Hour == tiempo.Now().Hour && tarjeta.ultimoBoleto().fechaUltimoViaje.DayOfYear == tiempo.Now().DayOfYear)
+                        {
+                            if ((tiempo.Now().Minute - tarjeta.ultimoBoleto().fechaUltimoViaje.Minute) < 5)
+                            {
+                                throw new Exception("No pasaron 5 minutos");
+                            }
+                            else //medio 5 min dif
+                            {
+                                tarjeta.saldo -= valorPasajeMedio;
+                                Boleto boleto = new Boleto();
+                                boleto.costo = valorPasajeMedio;
+                                boleto.fechaUltimoViaje = tiempo.Now();
+                                boleto.lineaDeColectivo = linea;
+                                boleto.tipoDeTarjeta = "Franquicia Media";
+                                boleto.saldoTarjeta = tarjeta.saldo;
+                                boleto.idTarjeta = tarjeta.ID;
+                                tarjeta.boletos.Add(boleto);
+                                tarjeta.cantViajesHoy++;
+                                if (tarjeta.pendiente > 0)
+                                {
+                                    if (tarjeta.pendiente >= boleto.costo)
+                                    {
+                                        tarjeta.saldo += boleto.costo;
+                                        tarjeta.pendiente -= boleto.costo;
+                                        tarjeta.checkPendiente();
+                                    } else
+                                    {
+                                        tarjeta.saldo += tarjeta.pendiente;
+                                        tarjeta.pendiente = 0;
+                                    } 
+                                    
+                                }
+                                return boleto;
+                            }
+                        }
+                        else //medio distinta hrs
+                        {
+                            tarjeta.saldo -= valorPasajeMedio;
+                            Boleto boleto = new Boleto();
+                            boleto.costo = valorPasajeMedio;
+                            boleto.fechaUltimoViaje = tiempo.Now();
+                            boleto.lineaDeColectivo = linea;
+                            boleto.tipoDeTarjeta = "Franquicia Media";
+                            boleto.saldoTarjeta = tarjeta.saldo;
+                            boleto.idTarjeta = tarjeta.ID;
+                            tarjeta.boletos.Add(boleto);
+                            tarjeta.cantViajesHoy++;
+                            if (tarjeta.pendiente > 0)
+                            {
+                                if (tarjeta.pendiente >= boleto.costo)
+                                {
+                                    tarjeta.saldo += boleto.costo;
+                                    tarjeta.pendiente -= boleto.costo;
+                                    tarjeta.checkPendiente();
+                                }
+                                else
+                                {
+                                    tarjeta.saldo += tarjeta.pendiente;
+                                    tarjeta.pendiente = 0;
+                                }
+
+                            }
+                            return boleto;
+                        }
+                    }
+                    else //mas de 4 viajes
+                    {
+                        tarjeta.saldo -= valorPasaje;
+                        Boleto boleto = new Boleto();
+                        boleto.costo = valorPasaje;
+                        boleto.fechaUltimoViaje = tiempo.Now();
+                        boleto.lineaDeColectivo = linea;
+                        boleto.tipoDeTarjeta = "Franquicia Media";
+                        boleto.saldoTarjeta = tarjeta.saldo;
+                        boleto.idTarjeta = tarjeta.ID;
+                        tarjeta.boletos.Add(boleto);
+                        tarjeta.cantViajesHoy++;
+                        if (tarjeta.pendiente > 0)
+                        {
+                            if (tarjeta.pendiente >= boleto.costo)
+                            {
+                                tarjeta.saldo += boleto.costo;
+                                tarjeta.pendiente -= boleto.costo;
+                                tarjeta.checkPendiente();
+                            }
+                            else
+                            {
+                                tarjeta.saldo += tarjeta.pendiente;
+                                tarjeta.pendiente = 0;
+                            }
+
+                        }
+                        return boleto;
+                    }
+                  }
+              } else //pasaje normal
             {
                 if ((tarjeta.saldo + tarjeta.perdonDivino()) < valorPasaje)
                 {
@@ -57,12 +228,28 @@ namespace TpSube{
                     tarjeta.saldo -= valorPasaje;
                     Boleto boleto = new Boleto();
                     boleto.costo = valorPasaje;
-                    boleto.fechaUltimoViaje = DateTime.Now;
+                    boleto.fechaUltimoViaje = tiempo.Now();
                     boleto.lineaDeColectivo = linea;
                     boleto.tipoDeTarjeta = "Sin Franquicia";
                     boleto.saldoTarjeta = tarjeta.saldo;
                     boleto.idTarjeta = tarjeta.ID;
                     tarjeta.boletos.Add(boleto);
+                    tarjeta.cantViajesHoy++;
+                    if (tarjeta.pendiente > 0)
+                    {
+                        if (tarjeta.pendiente >= boleto.costo)
+                        {
+                            tarjeta.saldo += boleto.costo;
+                            tarjeta.pendiente -= boleto.costo;
+                            tarjeta.checkPendiente();
+                        }
+                        else
+                        {
+                            tarjeta.saldo += tarjeta.pendiente;
+                            tarjeta.pendiente = 0;
+                        }
+
+                    }
                     return boleto;
                 }
             }   
