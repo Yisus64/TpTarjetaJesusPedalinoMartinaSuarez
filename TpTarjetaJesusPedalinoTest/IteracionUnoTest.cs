@@ -4,14 +4,14 @@ using System;
 
 namespace TpTarjetaJesusPedalinoTest
 {
-    public class Tests
+    public class TestsUno
     {
         Tarjeta tarjeta;
         Colectivo colectivo;
         [SetUp]
         public void Setup()
         {
-            tarjeta = new Tarjeta();
+            tarjeta = new Tarjeta(1);
             colectivo = new Colectivo();
         }
 
