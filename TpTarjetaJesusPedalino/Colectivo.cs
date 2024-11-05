@@ -7,7 +7,7 @@ namespace TpSube{
         public static int valorPasaje = 940;
         public Boleto pagarCon(Tarjeta tarjeta)
         {
-            if (tarjeta.saldo < valorPasaje){
+            if ((tarjeta.saldo + perdonDivino()) < valorPasaje){
                 throw new Exception("Saldo insuficiente");
             } else {
                 tarjeta.saldo -= valorPasaje;
