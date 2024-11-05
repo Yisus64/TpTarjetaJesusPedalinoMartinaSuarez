@@ -8,7 +8,7 @@ namespace TpSube
         // Ejemplo de prueba
         public static void Main()
         {
-            Tarjeta tarjeta = new Tarjeta();
+            Tarjeta tarjeta = new Tarjeta(6);
             tarjeta.recargar(5000);
             Colectivo colectivo = new Colectivo();
             Console.WriteLine(tarjeta.saldoActual());

@@ -11,7 +11,7 @@ namespace TpTarjetaJesusPedalinoTest
         [SetUp]
         public void Setup()
         {
-            tarjeta = new Tarjeta();
+            tarjeta = new Tarjeta(1);
             colectivo = new Colectivo();
         }
 
