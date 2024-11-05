@@ -13,12 +13,14 @@ namespace TpSube{
         public List<int> cargasPosibles = new List<int> { 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000 };
         public List<Boleto> boletos = new List<Boleto>();
         public int cantViajesHoy;
+        public int cantViajesMes;
         public int ID;
         public Tarjeta(int id)
         {
             this.saldo = 0;
             this.pendiente = 0;
             this.cantViajesHoy = 0;
+            this.cantViajesMes = 0;
             this.ID = id;
         }
         public void recargar(int recarga)
