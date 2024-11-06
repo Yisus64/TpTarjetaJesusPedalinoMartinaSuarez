@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Boleto.cs" />
+    <Compile Include="FranquicaJubilados.cs" />
     <Compile Include="Interurbano.cs" />
     <Compile Include="Colectivo.cs" />
     <Compile Include="FranquiciaCompleta.cs" />
